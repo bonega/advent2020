@@ -10,21 +10,21 @@ fn main() {
 
 fn problem1() {
     let groups = INPUT.split_terminator("\n\n");
-    let res:usize = groups.map(|group| {
+    let res: usize = groups.map(|group| {
         group.lines()
             .flat_map(|x| x.chars())
-            .collect::<HashSet<char>>().len()}
-    ).sum();
+            .collect::<HashSet<char>>().len()
+    }).sum();
     println!("Problem1 {}", res)
 }
 
 fn problem2() {
     let groups = INPUT.split_terminator("\n\n");
-    let res = groups.map(|group| {
+    let res: usize = groups.map(|group| {
         let mut lines = group.lines()
-            .map(|x|HashSet::from_iter(x.chars()));
-        let init:HashSet<_> = lines.next().unwrap();
-        lines.fold(init, |s1, s2|&s1 & &s2).len()}
-    ).sum::<usize>();
+            .map(|x| HashSet::from_iter(x.chars()));
+        let init: HashSet<_> = lines.next().unwrap();
+        lines.fold(init, |s1, s2| &s1 & &s2).len()
+    }).sum();
     println!("Problem2 {}", res);
 }
