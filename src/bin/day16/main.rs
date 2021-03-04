@@ -1,3 +1,5 @@
+mod part2;
+
 use regex::Regex;
 use std::ops::{RangeInclusive};
 
@@ -23,21 +25,21 @@ impl From<&str> for Rule {
         let b1 = m[3].parse().unwrap();
         let b2 = m[4].parse().unwrap();
         let range2 = b1..=b2;
-        Self{ range1, range2 }
+        Self { range1, range2 }
     }
 }
 
-fn parse_tickets(s:&str) -> usize {
+fn parse_tickets(s: &str) -> usize {
     let re = Regex::new(r"(?s)(?P<rules>.*)\n(?P<my_ticket>your ticket:.*)nearby tickets:\n(?P<nearby_tickets>.*)").unwrap();
     let m = re.captures(s).unwrap();
     let rules: Vec<Rule> = m["rules"].lines().map(Rule::from).collect();
-    let values:Vec<usize> = m["nearby_tickets"]
-        .split(&[',','\n'][..])
+    let values: Vec<usize> = m["nearby_tickets"]
+        .split(&[',', '\n'][..])
         .map(str::parse)
         .flatten().collect();
-    let error_rate:usize = values.into_iter()
-        .filter(|x|!rules.iter()
-            .any(|r|r.is_valid(*x)))
+    let error_rate: usize = values.into_iter()
+        .filter(|&x| !rules.iter()
+            .any(|r| r.is_valid(x)))
         .sum();
     error_rate
 }
@@ -53,4 +55,5 @@ fn main() {
     let s = include_str!("input.txt");
     let error_rate = parse_tickets(&s);
     println!("Problem 1: {}", error_rate);
+    println!("Problem 2: {:?}", part2::solve(&s))
 }
