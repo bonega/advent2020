@@ -2,9 +2,8 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 use std::fmt;
 use std::ops::RangeInclusive;
-mod part2;
 
-fn main() {
+pub(crate) fn main() {
     let s = include_str!("input.txt");
     let mut d = Dimension::new(s);
     d.tick();
@@ -13,14 +12,13 @@ fn main() {
     d.tick();
     d.tick();
     d.tick();
-    println!("Problem1: {}", d.active_cubes.len());
-    part2::main();
+    println!("Problem2: {}", d.active_cubes.len());
 }
 
 #[derive(Copy, Clone, Debug)]
 struct ActiveCube;
 
-type Index = (isize, isize, isize);
+type Index = (isize, isize, isize, isize);
 
 struct Dimension {
     active_cubes: HashSet<Index>
@@ -28,6 +26,7 @@ struct Dimension {
 
 struct DimensionSlice<'a> {
     z: isize,
+    w: isize,
     parent_dimension: &'a Dimension,
 }
 
@@ -37,7 +36,7 @@ impl<'a> DimensionSlice<'a> {
         let mut max_x = 0;
         let mut min_y = isize::MAX;
         let mut max_y = 0;
-        for (x, y, _) in &self.parent_dimension.active_cubes {
+        for (x, y, ..) in &self.parent_dimension.active_cubes {
             if x < &min_x {
                 min_x = *x;
             }
@@ -65,7 +64,7 @@ impl<'a> Display for DimensionSlice<'a> {
         for y in cols {
             write!(f, "\n")?;
             for x in rows.clone() {
-                let index = (x, y, self.z);
+                let index = (x, y, self.z, self.w);
                 let c = match self.parent_dimension.active_cubes.contains(&index) {
                     true => '#',
                     false => '.',
@@ -83,7 +82,7 @@ impl Dimension {
         for (y, line) in s.lines().enumerate() {
             for (x, c) in line.chars().enumerate() {
                 match c {
-                    '#' => { cubes.insert((x as isize, y as isize, 0)); }
+                    '#' => { cubes.insert((x as isize, y as isize, 0, 0)); }
                     '.' => {}
                     _ => unreachable!(c),
                 };
@@ -92,19 +91,21 @@ impl Dimension {
         Dimension { active_cubes: cubes }
     }
 
-    fn slice(&self, z: isize) -> DimensionSlice {
-        DimensionSlice { z, parent_dimension: self }
+    fn slice(&self, z: isize, w: isize) -> DimensionSlice {
+        DimensionSlice { z, w, parent_dimension: self }
     }
 
     fn neighbors(&self, index: &Index) -> Vec<Index> {
-        let (x0, y0, z0) = index;
+        let (x0, y0, z0, w0) = index;
         let mut neighbors: Vec<_> = Vec::new();
         for x in x0 - 1..=x0 + 1 {
             for y in y0 - 1..=y0 + 1 {
                 for z in z0 - 1..=z0 + 1 {
-                    let current_index = (x, y, z);
-                    if *index != current_index {
-                        neighbors.push(current_index);
+                    for w in w0 - 1..=w0 + 1 {
+                        let current_index = (x, y, z, w);
+                        if *index != current_index {
+                            neighbors.push(current_index);
+                        }
                     }
                 }
             }
@@ -144,7 +145,7 @@ fn parse_dimension_test() {
 ..#
 ###";
     let dimension = Dimension::new(s);
-    let slice = dimension.slice(0);
+    let slice = dimension.slice(0, 0);
     let res = format!("{}", slice);
     assert_eq!("z=0\n".to_owned() + s, res);
 }
@@ -161,6 +162,6 @@ fn test_six_cycles() {
     d.tick();
     d.tick();
     d.tick();
-    assert_eq!(112, d.active_cubes.len());
+    assert_eq!(848, d.active_cubes.len());
 
 }
