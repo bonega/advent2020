@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{anyhow, Context, Result, bail};
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -60,7 +60,7 @@ fn str_in_range(s: &str, range: RangeInclusive<usize>) -> Result<()> {
     let x = s.parse::<usize>()?;
     match range.contains(&x) {
         true => Ok(()),
-        false => Err(anyhow!("")),
+        false => bail!(""),
     }
 }
 
@@ -72,6 +72,6 @@ fn validate_hgt(s: &str) -> Result<()> {
     match (hgt, unit) {
         (150..=193, "cm") => Ok(()),
         (59..=76, "in") => Ok(()),
-        _ => Err(anyhow!("invalid range")),
+        _ => bail!("invalid range"),
     }
 }

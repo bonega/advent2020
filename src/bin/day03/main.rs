@@ -9,7 +9,7 @@ fn get_trees(map: &[u8], right: usize, down: usize) -> usize {
         match map.get(index) {
             Some(b'#') => { trees += 1 }
             Some(b'.') => {}
-            Some(c) => unreachable!("{}", c),
+            Some(c) => panic!("{}", c),
             None => { break trees; }
         }
         x += right;
