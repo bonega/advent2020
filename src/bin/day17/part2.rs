@@ -15,9 +15,6 @@ pub(crate) fn main() {
     println!("Problem2: {}", d.active_cubes.len());
 }
 
-#[derive(Copy, Clone, Debug)]
-struct ActiveCube;
-
 type Index = (isize, isize, isize, isize);
 
 struct Dimension {

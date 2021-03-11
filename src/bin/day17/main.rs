@@ -17,9 +17,6 @@ fn main() {
     part2::main();
 }
 
-#[derive(Copy, Clone, Debug)]
-struct ActiveCube;
-
 type Index = (isize, isize, isize);
 
 struct Dimension {
