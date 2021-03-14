@@ -86,7 +86,6 @@ fn testing() {
     let s1_ws = "1+ ( 2*3+1)+2";
     let (_, exp1) = expr(s1).unwrap();
     let (_, exp1_ws) = expr(s1_ws).unwrap();
-    dbg!(&exp1);
     assert!(is_match(s1_ws));
     assert_eq!(exp1, exp1_ws);
     assert_eq!(11, exp1.as_number());

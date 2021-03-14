@@ -91,7 +91,7 @@ mem[42] = 100
 mask = 00000000000000000000000000000000X0XX
 mem[26] = 1";
     let mut cpu = CPU::new();
-    cpu.exec_prg(PRG);
+    let _ = cpu.exec_prg(PRG);
     let sum = cpu.memory.into_iter().map(|(_, v)| v).sum::<usize>();
     assert_eq!(208, sum);
 }
@@ -99,6 +99,6 @@ mem[26] = 1";
 pub(crate) fn main() {
     let mut cpu = CPU::new();
     let s = include_str!("input.txt");
-    cpu.exec_prg(&s);
+    let _ = cpu.exec_prg(&s);
     println!("Problem 2: {}", cpu.memory.into_iter().map(|(_, v)| v).sum::<usize>());
 }

@@ -107,7 +107,7 @@ fn monkey_patch(cpu: &mut CPU) {
 fn main() -> anyhow::Result<()> {
     let s = include_str!("input.txt");
     let mut cpu: CPU = CPU::new(s);
-    cpu.run();
+    let _ = cpu.run();
     println!("Problem1: {}", cpu.acc);
     cpu.reset();
     monkey_patch(&mut cpu);
