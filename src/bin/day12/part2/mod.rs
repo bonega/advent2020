@@ -1,7 +1,6 @@
 use std::fmt::{Display, Formatter};
 use std::fmt;
 
-
 struct Waypoint {
     x: isize,
     y: isize,
@@ -97,11 +96,10 @@ F11";
     }
 }
 
-pub(crate) fn main() {
+pub fn solve(s: &str) -> usize {
     let mut ferry = Ferry::new();
-    let s = include_str!("input.txt");
     for line in s.lines() {
         ferry.execute(line);
     }
-    println!("Problem2: {}", ferry.manhattan_distance());
+    ferry.manhattan_distance()
 }

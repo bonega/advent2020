@@ -1,13 +1,12 @@
 use anyhow::{anyhow, Result};
 use nom::{
     branch::alt,
-    character::complete::{char, one_of},
+    character::complete::{char, digit1, multispace0, one_of},
+    combinator::all_consuming,
     IResult,
     multi::fold_many0,
     sequence::delimited,
 };
-use nom::character::complete::{digit1, multispace0};
-use nom::combinator::all_consuming;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Expr {
