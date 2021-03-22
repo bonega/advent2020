@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 use std::fmt;
 use std::ops::RangeInclusive;
+
 mod part2;
 
 fn main() {
@@ -95,7 +96,7 @@ impl Dimension {
 
     fn neighbors(&self, index: &Index) -> Vec<Index> {
         let (x0, y0, z0) = index;
-        let mut neighbors: Vec<_> = Vec::new();
+        let mut neighbors = Vec::new();
         for x in x0 - 1..=x0 + 1 {
             for y in y0 - 1..=y0 + 1 {
                 for z in z0 - 1..=z0 + 1 {
@@ -110,8 +111,8 @@ impl Dimension {
     }
 
     fn tick(&mut self) {
-        let mut remove_list: Vec<Index> = Vec::new();
-        let mut inactive_neighbors: HashMap<Index, usize> = HashMap::new();
+        let mut remove_list = Vec::new();
+        let mut inactive_neighbors = HashMap::new();
         for index in &self.active_cubes {
             let neighbors = self.neighbors(&index);
             let active_neighbors = neighbors.iter().filter(|index| self.active_cubes.contains(index));
@@ -159,5 +160,4 @@ fn test_six_cycles() {
     d.tick();
     d.tick();
     assert_eq!(112, d.active_cubes.len());
-
 }

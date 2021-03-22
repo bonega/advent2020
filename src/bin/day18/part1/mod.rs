@@ -1,7 +1,7 @@
 mod parser;
 
-pub fn solve(s:&str) -> usize {
-    s.lines().map(|line|parser::parse(line).unwrap()).sum()
+pub fn solve(s: &str) -> usize {
+    s.lines().map(parser::parse).flatten().sum()
 }
 
 #[test]

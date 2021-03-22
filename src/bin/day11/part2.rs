@@ -1,9 +1,10 @@
+use std::{fmt, iter};
 use std::fmt::{Display, Formatter, Write};
-use std::{iter, fmt};
 use std::ops::Index;
 
-use crate::square::{SeatState::{Empty, Occupied}, Square};
 use Square::Seat;
+
+use crate::square::{SeatState::{Empty, Occupied}, Square};
 
 #[derive(Copy, Clone, Debug)]
 enum Direction {
@@ -156,16 +157,10 @@ impl Index<(usize, usize)> for Map {
 
 impl From<&str> for Map {
     fn from(s: &str) -> Self {
-        use Square::*;
         let cols = s.find('\n').unwrap();
-        let squares: Vec<_> = s.lines().flat_map(|x| x.chars()
-            .map(|c| {
-                match c {
-                    '#' => Seat(Occupied),
-                    'L' => Seat(Empty),
-                    _ => Floor,
-                }
-            })).collect();
+        let squares: Vec<_> = s.lines()
+            .flat_map(str::chars)
+            .map(Square::new).collect();
         let rows = squares.len() / cols;
         Map { squares, rows, cols }
     }

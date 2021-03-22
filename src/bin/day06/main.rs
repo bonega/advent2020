@@ -12,8 +12,8 @@ fn problem1() {
     let groups = INPUT.split_terminator("\n\n");
     let res: usize = groups.map(|group| {
         group.lines()
-            .flat_map(|x| x.chars())
-            .collect::<HashSet<char>>().len()
+            .flat_map(str::chars)
+            .collect::<HashSet<_>>().len()
     }).sum();
     println!("Problem1 {}", res)
 }

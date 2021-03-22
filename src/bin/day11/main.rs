@@ -1,4 +1,4 @@
-use std::{fmt};
+use std::fmt;
 use std::fmt::{Display, Formatter, Write};
 use std::ops::Index;
 
@@ -27,11 +27,10 @@ impl Map {
         let indices = [(x - 1, y - 1), (x, y - 1), (x + 1, y - 1),
             (x - 1, y), (x + 1, y),
             (x - 1, y + 1), (x, y + 1), (x + 1, y + 1)];
-        let res = indices.iter().
-            filter(|(x, y)| *x >= 0 && x < &(self.cols as isize) && *y >= 0 && y < &(self.rows as isize))
+        indices.iter()
+            .filter(|(x, y)| *x >= 0 && x < &(self.cols as isize) && *y >= 0 && y < &(self.rows as isize))
             .map(|(x, y)| self.squares[self.index_from(*x as usize, *y as usize)])
-            .collect();
-        res
+            .collect()
     }
 
     fn tick(&mut self) -> bool {
@@ -86,18 +85,12 @@ impl Index<(usize, usize)> for Map {
 }
 
 
-impl From<&str> for Map {
-    fn from(s: &str) -> Self {
-        use Square::*;
+impl Map {
+    fn new(s: &str) -> Self {
         let cols = s.find('\n').unwrap();
-        let squares: Vec<_> = s.lines().flat_map(|x| x.chars()
-            .map(|c| {
-                match c {
-                    '#' => Seat(Occupied),
-                    'L' => Seat(Empty),
-                    _ => Floor,
-                }
-            })).collect();
+        let squares: Vec<_> = s.lines()
+            .flat_map(str::chars)
+            .map(Square::new).collect();
         let rows = squares.len() / cols;
         Map { squares, rows, cols }
     }
@@ -123,7 +116,7 @@ L.LLLLL.LL";
 
     #[test]
     fn test_from() {
-        let m = Map::from(SIMPLE_TEST_DATA);
+        let m = Map::new(SIMPLE_TEST_DATA);
         assert_eq!(10, m.rows);
         assert_eq!(10, m.cols);
         assert_eq!(11, m.index_from(1, 1));
@@ -134,13 +127,13 @@ L.LLLLL.LL";
 
     #[test]
     fn test_neighbors() {
-        let m = Map::from(SIMPLE_TEST_DATA);
+        let m = Map::new(SIMPLE_TEST_DATA);
         assert_eq!(vec![Floor, Seat(Empty), Seat(Empty)], m.neighbors(0));
     }
 
     #[test]
     fn simple_stable() {
-        let mut m = Map::from(SIMPLE_TEST_DATA);
+        let mut m = Map::new(SIMPLE_TEST_DATA);
         m.run();
         assert_eq!(37, m.nr_occupied_seats());
     }
@@ -148,7 +141,7 @@ L.LLLLL.LL";
 
 fn main() {
     let s = include_str!("input.txt");
-    let mut m = Map::from(s);
+    let mut m = Map::new(s);
     m.run();
     println!("Problem1 {}", m.nr_occupied_seats());
     part2::main();

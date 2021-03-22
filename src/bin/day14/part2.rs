@@ -1,7 +1,7 @@
-use regex::Regex;
 use std::collections::HashMap;
-use anyhow::Result;
 
+use anyhow::Result;
+use regex::Regex;
 
 #[derive(Debug)]
 struct Mask {

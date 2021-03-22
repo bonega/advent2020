@@ -19,11 +19,11 @@ fn get_trees(map: &[u8], right: usize, down: usize) -> usize {
 
 fn main() {
     let buffer = include_bytes!("input.txt");
-    let walk1 = get_trees(&buffer[..], 1, 1);
-    let walk2 = get_trees(&buffer[..], 3, 1);
-    let walk3 = get_trees(&buffer[..], 5, 1);
-    let walk4 = get_trees(&buffer[..], 7, 1);
-    let walk5 = get_trees(&buffer[..], 1, 2);
+    let walk1 = get_trees(buffer, 1, 1);
+    let walk2 = get_trees(buffer, 3, 1);
+    let walk3 = get_trees(buffer, 5, 1);
+    let walk4 = get_trees(buffer, 7, 1);
+    let walk5 = get_trees(buffer, 1, 2);
     println!("Problem1: {}", walk2);
     println!("Problem2: {}", walk1 * walk2 * walk3 * walk4 * walk5);
 }

@@ -46,14 +46,14 @@ fn parse_tickets(s: &str) -> usize {
                     .any(|r| r.is_valid(v)))
         })
         .collect();
-    let my_ticket: Vec<usize> = m["my_ticket"].split(&[',', '\n'][..]).map(str::parse).flatten().collect();
+    let my_ticket: Vec<_> = m["my_ticket"].split(&[',', '\n'][..]).map(str::parse).flatten().collect();
     tickets.push(my_ticket.clone());
     let nr_fields = rules.len();
 
     let mut rule_to_field: Vec<(usize, HashSet<_>)> = rules.iter()
         .enumerate()
         .map(|(i, r)| {
-            let v: HashSet<usize> = (0..nr_fields).filter(|&j| {
+            let v: HashSet<_> = (0..nr_fields).filter(|&j| {
                 tickets.iter()
                     .all(|t| {
                         r.is_valid(t[j])
@@ -63,8 +63,8 @@ fn parse_tickets(s: &str) -> usize {
         })
         .collect();
     rule_to_field.sort_by(|(_, a), (_, b)| a.len().cmp(&b.len()));
-    let mut res: Vec<(usize, usize)> = Vec::new();
-    let mut seen: HashSet<usize> = HashSet::new();
+    let mut res = Vec::new();
+    let mut seen = HashSet::new();
     for (i, v) in rule_to_field.iter() {
         res.push((*i, *v.difference(&seen).last().unwrap()));
         seen.extend(v);

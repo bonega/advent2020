@@ -17,16 +17,16 @@ fn test_complex_adapters() {
 }
 
 fn create_default_adapters(adapters: &[usize]) -> Vec<usize> {
-    let mut adapters:Vec<usize> = adapters.into();
+    let mut adapters: Vec<_> = adapters.into();
     adapters.sort();
-    adapters.insert(0,0);
+    adapters.insert(0, 0);
     adapters.push(3 + adapters.iter().max().unwrap());
     adapters
 }
 
 fn adapter_chain_distribution(adapters: &[usize]) -> BTreeMap<usize, usize> {
     let adapters = create_default_adapters(adapters);
-    let mut res: BTreeMap<usize, usize> = BTreeMap::new();
+    let mut res = BTreeMap::new();
     adapters.windows(2)
         .map(|x| x.last().unwrap() - x.first().unwrap())
         .for_each(|i| *res.entry(i).or_insert(0) += 1);
@@ -35,7 +35,7 @@ fn adapter_chain_distribution(adapters: &[usize]) -> BTreeMap<usize, usize> {
 
 fn nr_valid_chains(adapters: &[usize]) -> usize {
     let adapters = create_default_adapters(adapters);
-    let mut cache: BTreeMap<usize, usize> = BTreeMap::new();
+    let mut cache = BTreeMap::new();
     cache.insert(0, 1);
     for (k, v) in adapters[1..].iter().enumerate() {
         let acc = adapters[..k + 1].iter()

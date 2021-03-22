@@ -18,11 +18,10 @@ struct Parser {
 impl Parser {
     fn new(s: &str) -> anyhow::Result<Self> {
         let re = Regex::new(r"(\d+): ([^|\n]+)(?:\| (.+))?")?;
-        let arm_re = Regex::new(r"\d+")?;
         let mut rules = HashMap::new();
         for i in s.lines() {
             let caps = re.captures(i).context("No match")?;
-            let index = caps.get(1).context("Can't parse index")?.as_str().parse::<usize>()?;
+            let index = caps.get(1).context("Can't parse index")?.as_str().parse()?;
             let left_arm = caps.get(2).context("Can't find left arm")?.as_str();
             if let Some(literal) = left_arm.chars().find(|&c| c == 'a' || c == 'b') {
                 let literal = Rule::Literal(literal);
@@ -30,12 +29,19 @@ impl Parser {
                 continue;
             }
 
-            let left_arm: Vec<usize> = arm_re.captures_iter(left_arm).map(|m| m[0].parse().unwrap()).collect();
 
-            if let Some(s) = caps.get(3).map(|m| m.as_str()) {
-                let right_arm: Vec<usize> = arm_re.captures_iter(s).map(|m| m[0].parse().unwrap()).collect();
-                rules.insert(index, Rule::Or(left_arm, right_arm));
-            } else { rules.insert(index, Rule::And(left_arm)); }
+            fn parse_arm(arm: &str) -> Vec<usize> {
+                let re = Regex::new(r"\d+").unwrap();
+                re.captures_iter(arm).map(|m| m[0].parse().unwrap()).collect()
+            }
+            let left_arm = parse_arm(left_arm);
+            let res = match caps.get(3).map(|m| m.as_str()) {
+                Some(s) => {
+                    Rule::Or(left_arm, parse_arm(s))
+                }
+                None => { Rule::And(left_arm) }
+            };
+            rules.insert(index, res);
         }
         Ok(Self { rules })
     }

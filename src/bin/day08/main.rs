@@ -1,6 +1,6 @@
-use regex::Regex;
-use std::collections::{BTreeSet};
+use std::collections::HashSet;
 
+use regex::Regex;
 
 #[derive(Debug)]
 enum Instruction {
@@ -12,7 +12,7 @@ enum Instruction {
 impl Instruction {
     fn new(s: &str) -> Self {
         use Instruction::*;
-        let argument: isize = s[4..].parse().unwrap();
+        let argument = s[4..].parse().unwrap();
         match &s[0..3] {
             "acc" => ACC(argument),
             "jmp" => JMP(argument),
@@ -27,7 +27,7 @@ struct CPU {
     acc: isize,
     pc: usize,
     instructions: Vec<Instruction>,
-    visited_instructions: BTreeSet<usize>,
+    visited_instructions: HashSet<usize>,
 }
 
 enum CPUError {
@@ -40,9 +40,9 @@ type ExecResult = Result<(), CPUError>;
 impl CPU {
     fn new(s: &str) -> Self {
         let re = Regex::new(r"([a-z]{3} .+)").unwrap();
-        let instructions: Vec<Instruction> = re.captures_iter(s)
+        let instructions:Vec<_> = re.captures_iter(s)
             .map(|caps| Instruction::new(caps.get(1).unwrap().as_str())).collect();
-        CPU { acc: 0, pc: 0, instructions, visited_instructions: BTreeSet::new() }
+        CPU { acc: 0, pc: 0, instructions, visited_instructions: HashSet::new() }
     }
     fn jmp_rel(&mut self, x: isize) {
         self.visited_instructions.insert(self.pc);

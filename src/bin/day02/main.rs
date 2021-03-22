@@ -1,6 +1,5 @@
 use regex::Regex;
 
-
 fn main() {
     let s = include_str!("input.txt");
     let count = s.lines().filter(|x| is_valid(x)).count();
@@ -18,20 +17,20 @@ struct PasswordLine {
 
 
 fn is_valid(s: &str) -> bool {
-    let p: PasswordLine = s.into();
+    let p = PasswordLine::new(s);
     let count = p.text.matches(p.token).count();
     (p.first..p.second + 1).contains(&count)
 }
 
 fn is_valid2(s: &str) -> bool {
-    let p: PasswordLine = s.into();
+    let p = PasswordLine::new(s);
     let first = p.text.chars().nth(p.first - 1).unwrap();
     let second = p.text.chars().nth(p.second - 1).unwrap();
     (first == p.token) ^ (second == p.token)
 }
 
-impl From<&str> for PasswordLine {
-    fn from(s: &str) -> Self {
+impl PasswordLine {
+    fn new(s: &str) -> Self {
         let re = Regex::new(r"^(?P<min>\d+)-(?P<max>\d+) (?P<c>.): (?P<pass>.+)$").unwrap();
         let cap = re.captures(s).unwrap();
         PasswordLine {

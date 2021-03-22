@@ -35,7 +35,7 @@ fn test_simple() {
 
 fn str_to_ids(s: &str) -> Vec<(usize, usize)> {
     let caps = s.split(",");
-    let mut res: Vec<_> = Vec::new();
+    let mut res = Vec::new();
     for (i, c) in caps.enumerate() {
         if let Ok(c) = c.parse() {
             res.push((i, c));

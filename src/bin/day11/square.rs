@@ -3,8 +3,7 @@ use core::fmt;
 use std::fmt::Write;
 
 use SeatState::{Empty, Occupied};
-use Square::{Floor,Seat};
-
+use Square::{Floor, Seat};
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum SeatState {
@@ -19,6 +18,14 @@ pub enum Square {
 }
 
 impl Square {
+    pub fn new(c: char) -> Self {
+        match c {
+            '#' => Seat(Occupied),
+            'L' => Seat(Empty),
+            _ => Floor,
+        }
+    }
+
     pub fn is_seat(&self) -> bool {
         match self {
             Seat(_) => true,

@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use anyhow::{anyhow, Context, Result, bail};
+use anyhow::{anyhow, bail, Context, Result};
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -39,13 +39,16 @@ fn problem2(buffer: &str) {
 fn is_valid(block: &str) -> Result<()> {
     let re = Regex::new(r"(?:byr:(\S+)|iyr:(\S+)|eyr:(\S+)|hgt:(\S+)|hcl:(\S+)|ecl:(\S+)|pid:(\S+)|cid:(\S+)|\s)+")?;
     let cap = re.captures(block).context("")?;
-    str_in_range(cap.get(1).context("")?.as_str(), 1920..=2002)?;
-    str_in_range(cap.get(2).context("")?.as_str(), 2010..=2020)?;
-    str_in_range(cap.get(3).context("")?.as_str(), 2020..=2030)?;
-    validate_hgt(cap.get(4).context("")?.as_str())?;
-    validate_re(cap.get(5).context("")?.as_str(), &HCL_RE)?;
-    validate_re(cap.get(6).context("")?.as_str(), &ECL_RE)?;
-    validate_re(cap.get(7).context("")?.as_str(), &PID_RE)?;
+    let get_str = |x| {
+        cap.get(x).context("").map(|m| m.as_str())
+    };
+    str_in_range(get_str(1)?, 1920..=2002)?;
+    str_in_range(get_str(2)?, 2010..=2020)?;
+    str_in_range(get_str(3)?, 2020..=2030)?;
+    validate_hgt(get_str(4)?)?;
+    validate_re(get_str(5)?, &HCL_RE)?;
+    validate_re(get_str(6)?, &ECL_RE)?;
+    validate_re(get_str(7)?, &PID_RE)?;
     Ok(())
 }
 
@@ -57,8 +60,7 @@ fn validate_re(s: &str, re: &Regex) -> Result<()> {
 }
 
 fn str_in_range(s: &str, range: RangeInclusive<usize>) -> Result<()> {
-    let x = s.parse::<usize>()?;
-    match range.contains(&x) {
+    match range.contains(&s.parse()?) {
         true => Ok(()),
         false => bail!(""),
     }
@@ -67,7 +69,7 @@ fn str_in_range(s: &str, range: RangeInclusive<usize>) -> Result<()> {
 fn validate_hgt(s: &str) -> Result<()> {
     let re = Regex::new(r"(\d+)(cm|in)")?;
     let cap = re.captures(s).context("")?;
-    let hgt = cap.get(1).context("")?.as_str().parse::<usize>()?;
+    let hgt = cap.get(1).context("")?.as_str().parse()?;
     let unit = cap.get(2).context("")?.as_str();
     match (hgt, unit) {
         (150..=193, "cm") => Ok(()),

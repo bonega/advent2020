@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-
 fn main() {
     let p1_input = vec![0, 14, 1, 3, 7, 9];
     let mut memories = Memories::new(p1_input);
@@ -55,7 +54,7 @@ impl Iterator for Memories {
 fn test_memories() {
     let starting_numbers = vec![0, 3, 6];
     let memories = Memories::new(starting_numbers.clone());
-    let res: Vec<usize> = memories.skip(3).take(6).collect();
+    let res: Vec<_> = memories.skip(3).take(6).collect();
     assert_eq!(vec![0, 3, 3, 1, 0, 4], res);
 
     let mut memories = Memories::new(starting_numbers);

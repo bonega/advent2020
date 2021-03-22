@@ -32,7 +32,6 @@ impl Expr {
 
 #[allow(dead_code)]
 pub fn expr(input: &str) -> IResult<&str, Expr> {
-    // let (input, op1) = expr1(input)?;
     let (input, op1) = expr2(input)?;
     fold_many0(expr_second_arm, op1, |e1, (op, op2)| match op {
         '+' => Expr::Add {
