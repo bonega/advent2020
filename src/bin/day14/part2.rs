@@ -75,7 +75,7 @@ impl CPU {
                 let v = m["val"].parse()?;
                 let addresses = self.mask.addresses(base_addr);
                 for i in addresses.into_iter() {
-                    *self.memory.entry(i).or_insert(0) = v;
+                    self.memory.insert(i, v);
                 }
             }
         }

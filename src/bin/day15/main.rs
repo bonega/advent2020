@@ -36,13 +36,13 @@ impl Iterator for Memories {
     fn next(&mut self) -> Option<Self::Item> {
         self.last_spoken = if let Some(x) = self.seed.pop() {
             if let Some(last_spoken) = self.last_spoken {
-                *self.numbers_map.entry(last_spoken).or_insert(0) = self.index;
+                self.numbers_map.insert(last_spoken, self.index);
             }
             Some(x)
         } else {
             let last_spoken = self.last_spoken.unwrap();
             let current = self.numbers_map.get(&last_spoken).map(|x| self.index - x).or(Some(0));
-            *self.numbers_map.entry(last_spoken).or_insert(0) = self.index;
+            self.numbers_map.insert(last_spoken, self.index);
             current
         };
         self.index += 1;

@@ -32,7 +32,7 @@ impl Rule {
 fn parse_tickets(s: &str) -> usize {
     let re = Regex::new(r"(?s)(?P<rules>.*)\n(?P<my_ticket>your ticket:.*)nearby tickets:\n(?P<nearby_tickets>.*)").unwrap();
     let m = re.captures(s).unwrap();
-    let rules: Vec<_> = m["rules"].lines().filter_map(|line| Rule::new(line).ok()).collect();
+    let rules: Vec<_> = m["rules"].lines().map(Rule::new).flatten().collect();
     let values: Vec<usize> = m["nearby_tickets"]
         .split(&[',', '\n'][..])
         .map(str::parse)

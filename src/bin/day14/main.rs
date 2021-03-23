@@ -55,7 +55,7 @@ impl CPU {
             for m in mem_ops {
                 let i = m[1].parse().unwrap();
                 let res = self.mask.mask(m[2].parse().unwrap());
-                *self.memory.entry(i).or_insert(0) = res;
+                self.memory.insert(i, res);
             }
         }
     }
