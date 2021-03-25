@@ -8,7 +8,7 @@ fn main() {
 
 fn problem1(numbers: &[u32]) -> u32 {
     for (i, a) in numbers.iter().enumerate() {
-        for b in &numbers[i..] {
+        for b in &numbers[i + 1..] {
             if a + b == 2020 {
                 return a * b;
             }
@@ -20,8 +20,8 @@ fn problem1(numbers: &[u32]) -> u32 {
 
 fn problem2(numbers: &[u32]) -> u32 {
     for (i, a) in numbers.iter().enumerate() {
-        for (j, b) in numbers[i..].iter().enumerate() {
-            for c in &numbers[i + j..] {
+        for (j, b) in numbers[i + 1..].iter().enumerate() {
+            for c in &numbers[i + j + 1..] {
                 if a + b + c == 2020 {
                     return a * b * c;
                 }
