@@ -1,17 +1,17 @@
 fn find_encoding_error(nums: &[usize], preamble_len: usize) -> usize {
-    let res = nums.windows(preamble_len + 1).find(|x| {
-        let preamble = &x[..preamble_len];
-        let x = x.last().unwrap();
-        for (i, v) in preamble.iter().enumerate() {
-            for v2 in &preamble[i + 1..] {
-                if v + v2 == *x {
-                    return false;
+    nums
+        .windows(preamble_len + 1)
+        .find_map(|chunk| {
+            let (&checksum, preamble) = chunk.split_last()?;
+            for (i, a) in preamble.iter().enumerate() {
+                for b in &preamble[i + 1..] {
+                    if a + b == checksum {
+                        return None;
+                    }
                 }
             }
-        }
-        true
-    });
-    *res.unwrap().last().unwrap()
+            Some(checksum)
+        }).unwrap()
 }
 
 #[test]
@@ -22,9 +22,11 @@ fn test_find_encoding_error() {
 
 fn problem2(expected: usize, nums: &[usize]) -> Option<usize> {
     for size in 2..nums.len() {
-        let res = nums.windows(size).find(|x| expected == x.iter().sum());
+        let res = nums
+            .windows(size)
+            .find(|chunk| expected == chunk.iter().sum());
         if let Some(res) = res {
-            return Some(res.iter().min().unwrap() + res.iter().max().unwrap());
+            return Some(res.iter().min()? + res.iter().max()?);
         }
     };
     None
